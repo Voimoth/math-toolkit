@@ -1,0 +1,347 @@
+{
+  "version": 1,
+  "updated": "2026-10-19",
+  "families": [
+    {
+      "id": "classical-groups",
+      "name": "经典群",
+      "doc": "`\\mathrm{GL}_n(K)`、`\\mathrm{SL}_n`、`\\mathrm{PGL}_n`、`\\mathrm{PSL}_n`、`\\mathrm{O}`、`\\mathrm{SO}`、`\\mathrm{U}`、`\\mathrm{SU}`、`\\mathrm{Sp}`：字母正体，阶数作下标",
+      "doc_ban": "`\\mathcal{GL}`、`\\text{GL}`、裸 `GL`（数学段内）",
+      "scope": {
+        "courses": [
+          "数学/代数",
+          "数学/分析",
+          "物理/理论力学"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\mathcal\\{((?:P?G|P?S)L)\\}",
+          "repl": "\\\\mathrm{\\1}"
+        },
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\s+(P?GL|P?SL|SO|SU|Sp|O|U)(?![A-Za-z])",
+          "repl": "\\\\mathrm{\\1}"
+        },
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\{((?:P?G|P?S)L)\\}",
+          "repl": "\\\\mathrm{\\1}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])(P?G)[lL](?![A-Za-z])",
+          "repl": "\\\\mathrm{\\1L}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])(P?S)[lL](?![A-Za-z])",
+          "repl": "\\\\mathrm{\\1L}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])(P?GL|P?SL)(?![A-Za-z])",
+          "repl": "\\\\mathrm{\\1}"
+        }
+      ]
+    },
+    {
+      "id": "symmetric-group",
+      "name": "对称群",
+      "doc": "`\\mathfrak{S}_n`（哥特体 S）",
+      "doc_ban": "`S_n`、`\\mathcal{S}_n`、`\\mathbb{S}_n`",
+      "scope": {
+        "courses": [
+          "数学/代数/代数III",
+          "数学/代数/代数I"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\mathfrak\\s+(S)(?=_)",
+          "repl": "\\\\mathfrak{\\1}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])S_\\{(n(?:\\s*[+\\-]\\s*\\d+)?)\\}",
+          "repl": "\\\\mathfrak{S}_{\\1}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])S_(n|[3-7])(?![A-Za-z0-9])",
+          "repl": "\\\\mathfrak{S}_\\1"
+        }
+      ]
+    },
+    {
+      "id": "alternating-group",
+      "name": "交错群",
+      "doc": "`\\mathfrak{A}_n`",
+      "doc_ban": "`A_n`、`\\mathcal{A}_n`",
+      "scope": {
+        "courses": [
+          "数学/代数/代数III"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\mathfrak\\s+(A)(?=_)",
+          "repl": "\\\\mathfrak{\\1}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])A_\\{(n(?:\\s*[+\\-]\\s*\\d+)?|[4567])\\}",
+          "repl": "\\\\mathfrak{A}_{\\1}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])A_([4567]|n)(?![A-Za-z0-9])",
+          "repl": "\\\\mathfrak{A}_\\1"
+        }
+      ]
+    },
+    {
+      "id": "automorphism",
+      "name": "自同构群",
+      "doc": "`\\operatorname{Aut}`、`\\operatorname{Int}`、`\\operatorname{Out}`",
+      "doc_ban": "`\\mathrm{Aut}`、`\\text{Aut}`、裸 `Aut`",
+      "scope": {
+        "courses": [
+          "数学"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\s+(Aut|Int|Out)(?![A-Za-z])",
+          "repl": "\\\\operatorname{\\1}"
+        },
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\{(Aut|Int|Out)\\}",
+          "repl": "\\\\operatorname{\\1}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])(Aut|Int|Out)(?![A-Za-z])",
+          "repl": "\\\\operatorname{\\1}"
+        }
+      ]
+    },
+    {
+      "id": "hom-end",
+      "name": "同态与自同态",
+      "doc": "群/模：`\\operatorname{Hom}`、`\\operatorname{End}`；向量空间：`\\mathcal{L}(E,F)`",
+      "doc_ban": "`\\mathrm{Hom}`、裸 `Hom`；向量空间用 `\\operatorname{Hom}` 与 `\\mathcal{L}` 混用",
+      "scope": {
+        "courses": [
+          "数学/代数"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\s+(Hom|End)(?![A-Za-z])",
+          "repl": "\\\\operatorname{\\1}"
+        },
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\{(Hom|End)\\}",
+          "repl": "\\\\operatorname{\\1}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])(Hom|End)(?![A-Za-z])",
+          "repl": "\\\\operatorname{\\1}"
+        }
+      ]
+    },
+    {
+      "id": "kernel-image",
+      "name": "核与像",
+      "doc": "`\\ker`（LaTeX 原生算子）、`\\operatorname{Im}`、`\\operatorname{coker}`",
+      "doc_ban": "`\\operatorname{Ker}`（大写 K）、`\\mathrm{Im}`、`\\text{Im}`、裸 `Im`",
+      "scope": {
+        "courses": [
+          "数学",
+          "物理"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\s+[Kk]er(?![A-Za-z])",
+          "repl": "\\\\ker"
+        },
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\s+Im(?![A-Za-z])",
+          "repl": "\\\\operatorname{Im}"
+        },
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\{[Kk]er\\}",
+          "repl": "\\\\ker"
+        },
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\{Im\\}",
+          "repl": "\\\\operatorname{Im}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])Im(?![A-Za-z])",
+          "repl": "\\\\operatorname{Im}"
+        }
+      ]
+    },
+    {
+      "id": "identity-map",
+      "name": "恒等映射",
+      "doc": "`\\mathrm{Id}_E`（大写 I）",
+      "doc_ban": "`\\operatorname{id}`、`\\mathrm{id}`、裸 `id`/`Id`",
+      "scope": {
+        "courses": [
+          "数学",
+          "物理"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\s+(?:id|Id)(?![A-Za-z])",
+          "repl": "\\\\mathrm{Id}"
+        },
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\{(?:id|Id)\\}",
+          "repl": "\\\\mathrm{Id}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])(?:id|Id)(?![A-Za-z])",
+          "repl": "\\\\mathrm{Id}"
+        }
+      ]
+    },
+    {
+      "id": "span",
+      "name": "张成子空间",
+      "doc": "`\\operatorname{Vect}`",
+      "doc_ban": "`span`、`\\mathrm{Vect}`、裸 `Vect`",
+      "scope": {
+        "courses": [
+          "数学",
+          "物理"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\s+Vect(?![A-Za-z])",
+          "repl": "\\\\operatorname{Vect}"
+        },
+        {
+          "pattern": "\\\\(?:mathrm|text|operatorname)\\{Vect\\}",
+          "repl": "\\\\operatorname{Vect}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])Vect(?![A-Za-z])",
+          "repl": "\\\\operatorname{Vect}"
+        }
+      ]
+    },
+    {
+      "id": "cardinal",
+      "name": "基数",
+      "doc": "`\\operatorname{Card}(X)`，或元素个数 `|X|`",
+      "doc_ban": "裸 `Card`、`\\mathrm{Card}`",
+      "scope": {
+        "courses": [
+          "数学"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\(?:mathrm|operatorname|text)\\s+(?:Card|card)(?![A-Za-z])",
+          "repl": "\\\\operatorname{Card}"
+        },
+        {
+          "pattern": "\\\\(?:mathrm|text)\\{(?:Card|card)\\}",
+          "repl": "\\\\operatorname{Card}"
+        },
+        {
+          "pattern": "(?<![\\\\{A-Za-z])Card(?![A-Za-z])",
+          "repl": "\\\\operatorname{Card}"
+        }
+      ]
+    },
+    {
+      "id": "euler-e",
+      "name": "自然常数的底",
+      "doc": "`\\mathrm{e}^x`（正体 e）",
+      "doc_ban": "斜体 `e^x`",
+      "scope": {
+        "courses": [
+          "数学/代数",
+          "数学/分析",
+          "数学/概率"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\mathrm\\{\\\\mathrm\\{e\\}\\}\\^",
+          "repl": "\\\\mathrm{e}^"
+        },
+        {
+          "pattern": "(?<![A-Za-z\\\\_])e\\^(?!\\{?\\d)(?!\\*)",
+          "repl": "\\\\mathrm{e}^"
+        }
+      ]
+    },
+    {
+      "id": "permutation-sign",
+      "name": "置换的符号",
+      "doc": "`\\varepsilon(\\sigma)`（同页只用一种，定义处注明也叫 signe）",
+      "doc_ban": "同一门课内混用 `\\operatorname{sgn}` 与 `\\varepsilon`（代数I 用 sgn、代数III 用 ε，属跨课差异，各自课内统一即可）",
+      "scope": {
+        "files": [
+          "数学/代数/代数I/概念/符号差.md",
+          "数学/代数/代数I/笔记/习题课/14-对称群与置换的符号差.md"
+        ]
+      },
+      "fix": []
+    },
+    {
+      "id": "derived-group",
+      "name": "导群",
+      "doc": "`\\mathfrak{D}(G)`（讲义另写作 `\\mathcal{D}`，只保留一种）",
+      "doc_ban": "`\\mathcal{D}(G)` 与 `\\mathfrak{D}(G)` 混用",
+      "scope": {
+        "courses": [
+          "数学/代数"
+        ]
+      },
+      "fix": [
+        {
+          "pattern": "\\\\mathcal\\{D\\}",
+          "repl": "\\\\mathfrak{D}"
+        }
+      ]
+    }
+  ],
+  "manual_checks": [
+    "转置 `^T` 改成左上 t：需按出现处逐个改（涉及被转置对象成组），脚本不动，见 `--list manual`",
+    "`S_n`/`A_n` 在分析、概率课不是群（部分和、事件），作用域已限定在代数课程",
+    "`\\mathcal{S}_n(K)`/`\\mathcal{A}_n(K)` 是代数II 的对称/反对称矩阵，不是群，规则用 `(?!\\s*\\()` 排除后仍需抽查"
+  ],
+  "course_exceptions": [
+    {
+      "course": "代数III",
+      "item": "中心化子",
+      "kept": "正课 `Z_G(a)` / 习题课 `C_G(a)`",
+      "note": "正课为准，习题课保留并在此登记；`Z(G)=\\bigcap_a Z(a)`"
+    },
+    {
+      "course": "代数III",
+      "item": "二面体群",
+      "kept": "正课 `D_{2n}`（2n 阶）/ 习题课 `D_n`",
+      "note": "正课为准"
+    },
+    {
+      "course": "代数III",
+      "item": "换位子",
+      "kept": "`[a,b]=aba^{-1}b^{-1}`",
+      "note": "代数I 习题课用 `a^{-1}b^{-1}ab`；互为逆、互换，生成同一子群"
+    },
+    {
+      "course": "代数II",
+      "item": "对称/反对称矩阵",
+      "kept": "`\\mathcal{S}_n(K)`、`\\mathcal{A}_n(K)`",
+      "note": "与对称群 `\\mathfrak{S}_n` 区分：带 `(K)` 的是矩阵空间"
+    },
+    {
+      "course": "物理/理论力学",
+      "item": "离心率",
+      "kept": "斜体 `e`",
+      "note": "轨道力学里的 e 不是自然常数"
+    }
+  ]
+}

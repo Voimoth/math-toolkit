@@ -1,0 +1,162 @@
+{
+  "updated": "2026-10-19",
+  "note": "概念地图类文件的登记表。新增/改名/删除地图类文件必须同步这里；check_concept_sync.py 会拿磁盘上的同名类文件与本表比对。duty 决定检查方式：concept-index=承担概念清单（查陈旧+孤儿页）；course-index=学科/课程索引（查陈旧）；notes-entry=讲义章节入口（只查存在）。",
+  "patterns": [
+    "学习路径",
+    "概念页索引",
+    "_索引",
+    "00-总览"
+  ],
+  "entries": [
+    {
+      "path": "数学/代数/_索引.md",
+      "kind": "course-index",
+      "covers": "数学/代数",
+      "duty": "course-index"
+    },
+    {
+      "path": "数学/分析/_索引.md",
+      "kind": "course-index",
+      "covers": "数学/分析",
+      "duty": "course-index"
+    },
+    {
+      "path": "数学/概率/_索引.md",
+      "kind": "course-index",
+      "covers": "数学/概率",
+      "duty": "course-index"
+    },
+    {
+      "path": "数学/分析/分析I/_索引.md",
+      "kind": "course-index",
+      "covers": "数学/分析/分析I",
+      "duty": "course-index"
+    },
+    {
+      "path": "数学/分析/分析II/_索引.md",
+      "kind": "course-index",
+      "covers": "数学/分析/分析II",
+      "duty": "course-index"
+    },
+    {
+      "path": "数学/分析/分析III/_索引.md",
+      "kind": "course-index",
+      "covers": "数学/分析/分析III",
+      "duty": "course-index"
+    },
+    {
+      "path": "数学/分析/分析III/点集拓扑/_索引.md",
+      "kind": "course-index",
+      "covers": "数学/分析/分析III/点集拓扑",
+      "duty": "course-index"
+    },
+    {
+      "path": "数学/分析/分析III/多变量微积分/_索引.md",
+      "kind": "course-index",
+      "covers": "数学/分析/分析III/多变量微积分",
+      "duty": "course-index"
+    },
+    {
+      "path": "物理/理论力学/_索引.md",
+      "kind": "course-index",
+      "covers": "物理/理论力学",
+      "duty": "course-index"
+    },
+    {
+      "path": "数学/代数/代数III/概念/群论学习路径.md",
+      "kind": "learning-path",
+      "covers": "数学/代数/代数III/概念",
+      "duty": "concept-index"
+    },
+    {
+      "path": "数学/分析/分析III/点集拓扑/概念/点集拓扑学习路径.md",
+      "kind": "learning-path",
+      "covers": "数学/分析/分析III/点集拓扑/概念",
+      "duty": "concept-index"
+    },
+    {
+      "path": "数学/分析/分析III/Fourier/概念/傅里叶学习路径.md",
+      "kind": "learning-path",
+      "covers": "数学/分析/分析III/Fourier/概念",
+      "duty": "concept-index"
+    },
+    {
+      "path": "物理/理论力学/变分法学习路径.md",
+      "kind": "learning-path",
+      "covers": "物理/理论力学",
+      "duty": "course-index"
+    },
+    {
+      "path": "数学/分析/分析III/点集拓扑/笔记/04-概念页索引.md",
+      "kind": "concept-list",
+      "covers": "数学/分析/分析III/点集拓扑/概念",
+      "duty": "concept-index"
+    },
+    {
+      "path": "数学/分析/分析III/Fourier/笔记/09-收敛层级与概念页索引.md",
+      "kind": "concept-list",
+      "covers": "数学/分析/分析III/Fourier/概念",
+      "duty": "concept-index"
+    },
+    {
+      "path": "数学/代数/代数I/笔记/正课/00-总览.md",
+      "kind": "notes-entry",
+      "covers": "数学/代数/代数I/笔记/正课",
+      "duty": "notes-entry"
+    },
+    {
+      "path": "数学/代数/代数I/笔记/习题课/00-总览.md",
+      "kind": "notes-entry",
+      "covers": "数学/代数/代数I/笔记/习题课",
+      "duty": "notes-entry"
+    },
+    {
+      "path": "数学/代数/代数II/笔记/00-总览.md",
+      "kind": "notes-entry",
+      "covers": "数学/代数/代数II/笔记",
+      "duty": "notes-entry"
+    },
+    {
+      "path": "数学/代数/代数III/笔记/正课/00-总览.md",
+      "kind": "notes-entry",
+      "covers": "数学/代数/代数III/笔记/正课",
+      "duty": "notes-entry"
+    },
+    {
+      "path": "数学/代数/代数III/笔记/习题课/00-总览.md",
+      "kind": "notes-entry",
+      "covers": "数学/代数/代数III/笔记/习题课",
+      "duty": "notes-entry"
+    },
+    {
+      "path": "数学/分析/分析I/笔记/00-总览.md",
+      "kind": "notes-entry",
+      "covers": "数学/分析/分析I/笔记",
+      "duty": "notes-entry"
+    },
+    {
+      "path": "数学/分析/分析II/笔记/00-总览.md",
+      "kind": "notes-entry",
+      "covers": "数学/分析/分析II/笔记",
+      "duty": "notes-entry"
+    },
+    {
+      "path": "数学/分析/分析III/点集拓扑/笔记/00-总览.md",
+      "kind": "notes-entry",
+      "covers": "数学/分析/分析III/点集拓扑/笔记",
+      "duty": "notes-entry"
+    },
+    {
+      "path": "数学/分析/分析III/Fourier/笔记/00-总览.md",
+      "kind": "notes-entry",
+      "covers": "数学/分析/分析III/Fourier/笔记",
+      "duty": "notes-entry"
+    },
+    {
+      "path": "数学/概率/概率论/笔记/00-总览.md",
+      "kind": "notes-entry",
+      "covers": "数学/概率/概率论/笔记",
+      "duty": "notes-entry"
+    }
+  ]
+}
