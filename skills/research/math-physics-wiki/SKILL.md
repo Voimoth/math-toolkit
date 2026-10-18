@@ -35,7 +35,7 @@ metadata:
 
 - 网络:arXiv 可访问;Semantic Scholar 可访问但约 1 req/s、易 429;维基百科被墙(000,勿重试)。
 
-- git: vault 根即仓库,远端 https://github.com/USTC25010409/math_wiki.git(私有),GCM 免密;改完 `git add`(只加目标文件)+ commit + push。已配 pre-commit 钩子(>5MB 文件拒绝提交)、`.gitignore` 大文件规则、`.gitattributes` 锁 LF;详见下文「git 卫生与 .git 膨胀」。
+- git: vault 根即仓库,远端 https://github.com/Voimoth/math_wiki.git(公开),走 SSH(`ssh.github.com:443`);改完 `git add`(只加目标文件)+ commit + push。已配 pre-commit 钩子(>5MB 文件拒绝提交)、`.gitignore` 大文件规则、`.gitattributes` 锁 LF;详见下文「git 卫生与 .git 膨胀」。
 
 ## 答疑归档流程(标准)
 
