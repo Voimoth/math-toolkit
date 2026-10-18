@@ -43,6 +43,13 @@ python3 skills/note-taking/wiki-writing-conventions/scripts/check_notation.py --
 
 同目录的 `check_wikilinks.py`（链接健康）与 `check_concept_sync.py`（概念地图同步）是配套的另外两项检查。
 
+## 说明
+
+仓库里的技能文本与配置注释主要由 DeepSeek 生成，少量内容来自 GPT 与 GLM，再经人工挑选与修改。
+
+Neovim 配置单独放出来，是因为同一份 Markdown 在不同编辑器里的 LaTeX 渲染差别很大：行内公式的定界符、反斜杠转义、MathJax 支持的宏，各家实现并不一致。
+照这套配置能拿到与笔记一致的显示效果；不想折腾环境的话，直接照抄 `nvim/` 即可。
+
 ## 许可
 
 MIT，见 `LICENSE`。技能里的数学内容整理自课程讲义与公开教材，仅供学习。
