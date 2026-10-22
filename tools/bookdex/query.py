@@ -13,6 +13,7 @@
 import os, sys, json, sqlite3, re, unicodedata
 
 DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "index.db")
+ALIAS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aliases.tsv")
 CJK = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
 # 书签里常混进 PDF 的控制字符（\x00 等），显示前清掉
 CTRL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
@@ -28,6 +29,28 @@ def fold(s):
     s = (s or "").replace("œ", "oe").replace("æ", "ae").replace("’", "'")
     s = unicodedata.normalize("NFD", s)
     return "".join(c for c in s if unicodedata.category(c) != "Mn")
+
+
+def load_aliases():
+    """手工别名表：一行「查询词<TAB>路径片段」，多个片段写多行。
+    用于补索引拿不到的东西——作者名、俗称、出版社、系列名；
+    尤其救那种文件名毫无信息的书（Analysis123.pdf 之于「于品」）。"""
+    if not os.path.exists(ALIAS_FILE):
+        return []
+    out = []
+    with open(ALIAS_FILE, encoding="utf-8") as f:
+        for line in f:
+            line = line.rstrip("\n")
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            parts = line.split("\t")
+            if len(parts) < 2:
+                continue
+            key = fold(parts[0]).lower().strip()
+            frag = parts[1].strip()
+            if key and frag:
+                out.append((key, frag))
+    return out
 
 
 def terms(q):
@@ -54,7 +77,7 @@ def _matcher(w):
     return lambda t: rx.search(t) is not None
 
 
-def score_record(rec, zh, en):
+def score_record(rec, zh, en, qf="", aliases=()):
     """返回 (分值, 命中章节列表)。封面/版权页（page<=5）的条目权重大幅降低——
     它们往往把书名重复一遍，看起来命中其实什么都没说。"""
     toc = rec["toc"]
@@ -98,6 +121,29 @@ def score_record(rec, zh, en):
             s += 2.5
     rec["_dir_hit"] = dir_hit
 
+    # 目录名命中：书名不具信息时（Analysis123.pdf），作者/主题只写在目录里
+    dir_l = fold(rec.get("dir") or "").lower()
+    dir_name_hit = False
+    if dir_l:
+        if any(t in dir_l for t in zh):
+            dir_name_hit = True
+        elif any(_matcher(w)(dir_l) for w in en):
+            dir_name_hit = True
+        if dir_name_hit:
+            s += 2
+    rec["_dir_name_hit"] = dir_name_hit
+
+    # 手工别名表（作者名、俗称、系列名）：按书名级命中计分
+    alias_hit = False
+    if qf:
+        for key, frag in aliases:
+            if frag in rec["path"] and (key == qf or key in qf or qf in key):
+                alias_hit = True
+                break
+    if alias_hit:
+        s += 8
+    rec["_alias_hit"] = alias_hit
+
     # 层级加权：课程在用（3） > MPSI 预科（2） > 普通参考书（1）
     s *= 1 + 0.6 * (rec.get("tier", 1) - 1)
 
@@ -120,6 +166,8 @@ def main():
         print("索引不存在，先跑 index.py", file=sys.stderr)
         return 1
     zh, en = terms(q)
+    qf = fold(q).lower().strip()
+    aliases = load_aliases()
     db = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     rows = db.execute(
         "select path,dir,name,pages,has_text,toc_json,title,author,toc_n,tier,dir_text,dir_src "
@@ -131,7 +179,7 @@ def main():
                "has_text": has_text, "toc": json.loads(toc_json or "[]"),
                "title": title or "", "author": author or "",
                "tier": tier or 1, "dir_text": dir_text or "", "dir_src": dir_src or ""}
-        s, hits = score_record(rec, zh, en)
+        s, hits = score_record(rec, zh, en, qf, aliases)
         if s > 0:
             out.append((s, rec, hits))
     out.sort(key=lambda x: (-x[0], x[1]["name"]))
@@ -139,6 +187,8 @@ def main():
         print(json.dumps([{"score": round(s, 1), "path": r["path"], "pages": r["pages"],
                            "tier": r["tier"], "has_text": r["has_text"],
                            "dir_hit": bool(r.get("_dir_hit")), "dir_src": r["dir_src"],
+                           "dir_name_hit": bool(r.get("_dir_name_hit")),
+                           "alias_hit": bool(r.get("_alias_hit")),
                            "hits": [{"level": h[1], "title": h[2], "page": h[3]} for h in hits[:8]]}
                           for s, r, hits in out[:limit]], ensure_ascii=False, indent=2))
         return 0
@@ -153,9 +203,13 @@ def main():
         if not books_only:
             for w, lvl, title, page in hits[:5]:
                 print(f"    p.{page:<5} {'  ' * min(lvl, 3)}{title[:80]}")
-            if not hits and r.get("_dir_hit"):
+            if not hits and r.get("_alias_hit"):
+                print("    （按别名表命中：书名/元数据里没有这个关键词，见 aliases.tsv）")
+            elif not hits and r.get("_dir_hit"):
                 src = "OCR" if r["dir_src"].startswith("ocr") else "文本层"
                 print(f"    （无书签；前 20 页{src}目录页里出现该词，自己去翻）")
+            elif not hits and r.get("_dir_name_hit"):
+                print("    （命中在所在目录名，非书名/章节标题）")
         print()
     return 0
 
