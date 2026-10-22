@@ -41,7 +41,7 @@ quantum, with a view towards categorification`（vault `代数III/笔记/讲座/
 - 于是 1901 年出现「两头得同一批函数」的局面：Frobenius 从群、Schur 从中心化子。
   **Schur–Weyl 这个名字与物理地位是 Weyl 后来的事**（en-wiki *Schur–Weyl duality* 明说：Schur discovered,
   Weyl popularized it in his books on quantum mechanics and invariant theory）。
-- **踢球的球**：为什么 Schur 不能照 Frobenius 直接对 $\mathrm{GL}_n$ 做特征标？
+- **关键卡点**：为什么 Schur 不能照 Frobenius 直接对 $\mathrm{GL}_n$ 做特征标？
   给的唯一事实：$\mathrm{GL}_n$ 无限，Frobenius 那套正交关系是给有限群造的；中心化子是有限维代数，可用双中心化子。
 
 ### 四｜1920s–30s：Weyl 把它变成物理语言
