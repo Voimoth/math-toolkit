@@ -28,7 +28,7 @@
 | `obsidian-vault-notes/references/math-note-style.md` | 同上文件 §5（证明状态标签、正式 callout 不放状态行、三种来源分清）+ §3（TeX 控制词 shadow） |
 | `pdf-problem-search/references/query-normalization.md` + SKILL.md 的 Verification Rules / Common Failure Modes | `pdf-problem-search/SKILL.md` 新增三节（查询归一化、验证规则、空结果话术、失败冻结回归） |
 | `pdf-problem-search/references/improvement-strategy.md` | 同上（失败分层 + 优先可复用特征） |
-| `manage-personal-knowledge/references/search-evaluation-contract.md` | `math-library-search/SKILL.md` 新增「结果契约与置信度」节 |
+| `manage-personal-knowledge/references/search-evaluation-contract.md` | `math-library-search/SKILL.md` 新增「结果契约与置信度」节（该技能 2026-10-20 已删，内容随 RAG 一起弃用） |
 | `math-coach/references/attempt-graph.md` | 只搬思想（结论门 + 未闭合义务 fail-closed + 有界上下文预算），未引入其 SQLite 图存储 |
 
 ## 判定不值得搬的（与理由）

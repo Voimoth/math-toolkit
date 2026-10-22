@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-19",
+  "updated": "2026-10-21",
   "note": "概念地图类文件的登记表。新增/改名/删除地图类文件必须同步这里；check_concept_sync.py 会拿磁盘上的同名类文件与本表比对。duty 决定检查方式：concept-index=承担概念清单（查陈旧+孤儿页）；course-index=学科/课程索引（查陈旧）；notes-entry=讲义章节入口（只查存在）。",
   "patterns": [
     "学习路径",

@@ -18,7 +18,7 @@ SKILLS=(
   research/math-coach
   research/math-physics-wiki
   research/math-notes-transcription
-  research/math-library-search
+  bookdex
   research/pdf-problem-search
   research/group-theory-coaching
   research/mechanics-coaching

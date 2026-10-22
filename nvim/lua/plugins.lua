@@ -332,7 +332,12 @@ later(function()
 			"vim",
 			"vimdoc",
 		},
-		highlight = { enable = true },
+		-- latex 的 treesitter 高亮必须关掉：本机手工装了 latex.so（site/parser/latex.so），
+		-- nvim-treesitter 会对"有 parser 的 buffer"一律启动 treesitter 高亮，把 &syntax 清空，
+		-- VimTeX 随即报 "Syntax highlighting is controlled by Treesitter!"
+		-- （判据在 vimtex/autoload/vimtex/nvim.vim：syntax 为空 + highlighter.active 非空）。
+		-- LaTeX 高亮本来就走 vimtex 的 syntax，这里只保留其它语言。
+		highlight = { enable = true, disable = { "latex" } },
 		indent = { enable = true },
 	})
 end)

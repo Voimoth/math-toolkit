@@ -20,7 +20,7 @@ nvim/                    Neovim 配置（mini.deps 管理插件，obsidian.nvim 
 | `math-physics-wiki` | wiki 维护主流程：答疑归档、概念页、索引 |
 | `wiki-writing-conventions` | 写作约定、记号标准、概念同步、检查脚本 |
 | `math-notes-transcription` | 手写/扫描笔记转写与结构化 |
-| `math-library-search` | 本地数学书库检索（RAG） |
+| `bookdex` | 参考书目录检索：哪本书讲过 X（8300 本 / 201 万页） |
 | `pdf-problem-search` | 在 PDF 资料库里定位定理/习题出处 |
 | `group-theory-coaching` | 代数III 群论课程内容库 |
 | `mechanics-coaching` | 理论力学课程内容库 |
