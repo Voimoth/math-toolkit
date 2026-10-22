@@ -32,6 +32,24 @@ nvim/                    Neovim 配置（mini.deps 管理插件，obsidian.nvim 
 技能格式就是 Hermes / DSH 的 `SKILL.md` 结构（YAML frontmatter + 正文 + `references/` + `scripts/`），
 把需要的目录放进 agent 的技能目录即可；`nvim/` 可直接覆盖到 `~/.config/nvim`。
 
+## 工具：bookdex（参考书目录检索）
+
+`tools/bookdex/` 是上面 `bookdex` 技能的完整实现：只索引**书名 + PDF 书签目录**，没有书签的
+取前 20 页目录页文本（扫描件走 tesseract OCR），所以索引库只有几十 MB。
+
+**仓库里不放书（PDF）**：书籍本身有版权，体量也是几十 GB 到几 TB 量级。工具留在这里，
+自己拿私有书库跑一遍就能得到同样的查询能力：
+
+```bash
+cd tools/bookdex
+python3 -m venv venv && ./venv/bin/pip install pymupdf
+BOOKDEX_ROOT=/path/to/你的书库 ./venv/bin/python index.py      # 建库（增量，可 --limit 先试水）
+./venv/bin/python query.py "正规子群"
+```
+
+目录布局、层级权重（课程在用 > MPSI 预科 > 普通参考书）、OCR 语言选择、已知限制都在
+`tools/bookdex/README.md`。
+
 ## 记号标准
 
 `skills/note-taking/wiki-writing-conventions/references/notation-rules.json` 是唯一规则源，

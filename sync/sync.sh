@@ -48,12 +48,19 @@ fi
 
 rsync "${RS[@]}" --exclude '.git' "$NVIM/" "$DST/nvim/"
 
+# 工具：bookdex（只发布代码与说明，索引库与 venv 不进仓库）
+BOOKDEX_SRC="${BOOKDEX_SRC:-$HOME/.local/share/bookdex}"
+if [[ -d "$BOOKDEX_SRC" ]]; then
+  mkdir -p "$DST/tools/bookdex"
+  rsync "${RS[@]}" --exclude 'index.db' --exclude 'venv' "$BOOKDEX_SRC/" "$DST/tools/bookdex/"
+fi
+
 if [[ $DRY == 1 ]]; then echo "dry-run 结束"; exit 0; fi
 
 if [[ -f "$LOCAL/sanitize.sed" ]]; then
   while IFS= read -r -d '' f; do
     sed -i -f "$LOCAL/sanitize.sed" "$f"
-  done < <(find "$DST/skills" "$DST/nvim" -type f \( -name '*.md' -o -name '*.py' -o -name '*.sh' -o -name '*.json' -o -name '*.lua' \) -print0)
+  done < <(find "$DST/skills" "$DST/nvim" "$DST/tools" -type f \( -name '*.md' -o -name '*.py' -o -name '*.sh' -o -name '*.json' -o -name '*.lua' \) -print0 2>/dev/null)
 fi
 
 cd "$DST"

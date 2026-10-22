@@ -64,7 +64,7 @@ wiki 页面、文件、回复中**不插 emoji / 符号表情**（★ ⚠️ ✅
   **概念页的补充与新建也一样，直接动手（2026-10-08 用户明确）**：需要补的判据/例子/推论直接补进既有那一页，不要先问「要不要补」。**一概念一文件是跨课程的**——同一概念只在最初那门课有一页，别门课（含新开课）的讲解要补就补这同一页，**不为新课复制同名页**（复制会让 `[[概念名]]` 变二义）；有疑问的只是「这概念值不值得建页」，那是建页阈值问题，不是询问问题。
 - **git**：改完 `git add`（只加目标文件）＋ commit ＋ push；`log.md` 追加一条变更记录。（概念同步见 §6，子代理见 §7）
 - **Obsidian 会自己重排 frontmatter，保留就行**：用户开着 Obsidian 时插件会把页面改写成 properties 格式（`id`、`aliases: []`、`tags` 变列表、日期加引号）。这是他的改动，**不要还原**成旧的紧凑写法，也不要当成 diff 噪音 revert；提交时照原样带上。
-- **对外发布配套仓库**：工具库独立成库，不塞进 vault；发布前用 `git ls-files` 扫身份信息与绝对路径（同步脚本与排除表本身就是高发泄漏点，要本地化）；课程笔记用 CC BY-NC-SA + `NOTICE` 限定范围，代码用 MIT；README 只写「是什么/怎么用/许可」，**不写脱敏与上传流程**。细则见 `references/public-companion-repo.md`。
+- **对外发布配套仓库**：工具库独立成库，不塞进 vault；发布前用 `git ls-files` 扫身份信息与绝对路径（同步脚本与排除表本身就是高发泄漏点，要本地化）；课程笔记用 CC BY-NC-SA + `NOTICE` 限定范围，代码用 MIT；README 只写「是什么/怎么用/许可」，**不写脱敏与上传流程**。**技能文本改完当轮跑 `bash sync/sync.sh`**——仓库不会自动跟，用户按仓库提交日期判断有没有更新；同步前核对 `SKILLS` 列表与现实一致（改名后的旧目录要 `git rm`）。细则见 `references/public-companion-repo.md`。
 - **交换图**：一律 `\begin{array}{c...c}` + `\xrightarrow`/`\xleftarrow`/`\big\downarrow`/`\big\uparrow`/`\Big\Vert`/`=` 的方形画法，**不要用 amscd 的 `\begin{CD}`**（pandoc 的 LaTeX 模板不带 amscd，直接报 `Environment CD undefined`；Obsidian 的 MathJax full bundle 其实带 amsCd，所以 CD 是「能在 Obsidian 看、但编译不出 PDF」的单端写法，array 才是双端交集）；2026-10-21 已把全库 18 处 CD 全部换成 array。竖直箭头标签按 amscd 位置习惯放（`@V{lab}VV` 标注在左 → `{\scriptstyle lab}\big\downarrow`，`@VV{lab}V` 标注在右 → `\big\downarrow{\scriptstyle lab}`）。**改完要跑渲染色检并逐个核对箭头方向**。
 - **史实/出处类内容要有来源，未查实的标 `[?]`**：往页里写「谁先提出某概念、术语的来历、某结论的标准出处」时，
   必须落得出**一手或权威来源**（原始论文/书信的书名+页码，或 MacTutor／Wikipedia 的条目名），不要凭记忆或搜索摘要下断言；

@@ -61,3 +61,22 @@ git push -f origin main
 - **不写维护流水线**：怎么脱敏、怎么同步上传、排除了哪些个人内容，一律不进公开 README——对读者无用，且把内部流程和个人内容清单暴露出去。用户明确要求过这一点。
 - 生成来源写一句即可（内容主要由 X 生成，少量来自 Y/Z，经人工核对修改；错误欢迎 issue）。
 - 配套的编辑器配置要写**动机**：同一份 Markdown 在不同编辑器里 LaTeX 渲染差别很大（行内公式定界符、反斜杠转义、MathJax 宏），给出「照这套配置能得到一致显示，不想配置可直接照抄」——否则读者不知道这个目录为什么存在。
+
+## 6. 日常同步：技能改动之后当轮推（不是发布时才推）
+
+这个仓库是**手动**同步的：`bash sync/sync.sh` 把 `~/.hermes/skills` 下 `SKILLS` 列表里的技能与 `~/.config/nvim`
+rsync 进库、commit、push。它不会自己跑，所以「技能里写了新规则」≠「仓库里有新规则」——用户直接看仓库
+提交日期判断有没有更新，隔几天没推就会被点名。
+
+- **触发条件**：动了 `sync.sh` 的 `SKILLS` 列表里任何一个技能的文本/脚本，或动了 nvim 配置 → 当轮跑
+  `bash sync/sync.sh`。只改 vault（`/mnt/e/notes`）不必跑，笔记不在这个仓库里。
+- **同步前核对列表有没有 drift**：`SKILLS` 是硬编码的，技能改名/退役后脚本只往 stderr 打一行
+  「跳过（本机没有）：…」，又被 `tail` 吃掉，于是静默不发布。三项一起核：列表每项都存在；本机新增的
+  技能要不要纳进来（改名时列表、README 技能表、仓库里的旧目录 `git rm -r` 三处同时改）；README 的技能表
+  与列表逐行对得上。
+- **确认真的推上去了**：`git rev-parse --short HEAD` 与 `git ls-remote origin refs/heads/main` 前 7 位一致，
+  并 `git ls-files | grep <今天新写的文件>` 有输出——本地 commit 成功不等于远端有。
+- **同步后跑 vault 检查**（这轮改过笔记或表达规则时）：`check_notation.py --check <vault>`、
+  `check_concept_sync.py --check <vault>`、`check_wikilinks.py <vault>` 应全 0；`lint_natural_chinese.py --all <vault>`
+  **不接受 `--check`**，且命中只是软提示不是错误（要逐条判断改不改）。
+- 同步脚本、排除表、脱敏 sed 都放 `sync/local/`（`.gitignore` 掉），仓库里只留通用脚本——理由见第 2 节。
