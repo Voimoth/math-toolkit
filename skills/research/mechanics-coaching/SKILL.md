@@ -63,9 +63,10 @@ metadata:
 
 ### hw6 / hw7（2026-10：线性代数准备 → 微振动 → 参数共振）
 
-题地图、易错记号、讲解顺序见 `references/hw6-hw7-vibration.md`；**Hill/Mathieu 稳定性理论全套**（Floquet → $|\operatorname{tr}M|<2$ → $\delta=n^2/4$ 的舌 → 倒立摆的 Kapitza 支）见 `references/hill-mathieu-theory.md`，配套数值扫图脚本 `scripts/mathieu_stability.py`。三句话：hw6 Q1–Q2 提供 Dirac 符号与广义本征值（$\det(B-\lambda A)=0$）的语言；hw6 Q3 与 hw7 Q1 是「一个耦合例子 → 一般微振动 $\det(K-\omega^2M)=0$」；hw7 Q3 的参数共振要分清两支——$\Omega\approx2\sqrt{g/l}$ 的**主舌属于下垂单摆**，倒立摆 $\delta<0$ 走的是大 $\epsilon$ 的 Kapitza 稳定，定量边界不凭记忆报数。
+题地图、易错记号、讲解顺序见 `references/hw6-hw7-vibration.md`；**Hill/Mathieu 稳定性理论全套**（Floquet → $|\operatorname{tr}M|<2$ → $\delta=n^2/4$ 的舌 → 倒立摆的 Kapitza 支）见 `references/hill-mathieu-theory.md`，配套数值扫图脚本 `scripts/mathieu_stability.py`。三句话：hw6 Q1–Q2 提供 Dirac 符号与广义本征值（$\det(B-\lambda A)=0$）的语言；hw6 Q3 与 hw7 Q1 是「一个耦合例子 → 一般微振动 $\det(K-\omega^2M)=0$」；hw7 Q3 的参数共振要分清两支——$\Omega\approx2\sqrt{g/l}$ 的**主舌属于下垂单摆**，倒立摆 $\delta<0$ 的稳定边界就是 $n=0$ 舌的上边界 $\delta>-\epsilon^2/2+7\epsilon^4/32$（一阶即 Kapitza 判据 $a^2\Omega^2>2gl$；一阶式 / Maclaurin 级数 / Floquet 数值三方核对值见 references）。**别写成「靠大 $\epsilon$ 稳定」**：$a\ll l$ 恒有 $\epsilon\ll1$，真正的条件是 $\sqrt{-\delta}<\epsilon/\sqrt2$。
 **进度**：hw6 的作业本身未过（只建了概念页）；**hw7 Q1(a)(b) 已过**——他自己写出二阶 $T,V$（第一版交叉项差 4 倍，给判据后改对），又独立算出 $M,K$ 与本征频率通式并自检通过；现停在 **(c) 简正坐标与变换矩阵**（他说「懒得分算、直接告诉答案」时只给了 (b) 的全答案）。答案、三条简化与三个概念混淆的答法见 `references/hw6-hw7-vibration.md`。原题里 Q2 是 $V=\frac12k(x^2+y^2)$ 的笛卡尔写法，讲题别改成 $\frac12kr^2$。
 **hw7 Q1 的路线已定案**：他有理由地指出老师走的是 §5.4「简正模式」（先 $M^{1/2}$ 化标准型再对角化），不是 §5.1.2 的 $\det(K-\omega^2M)=0$。**(b)+(c) 一起做走 §5.4**，页号与两条路的等价性见 `references/hw6-hw7-vibration.md`。
+**hw7 Q3 已完整讲透**（三张图：模型与方程 / 快慢分离 / 严格版与数值核对；正文只四句），交付形态与可复用推导链见 `references/hw6-hw7-vibration.md` 的「Q3 完整交付形态」节。
 
 hw4/hw5(有心力场 + Schwarzschild)的题地图、**回原书核对过的事实**(朗道 §15 习题 2 原文是 $U=-\alpha/r^2,\alpha>0$)、记号坑与节奏教训见 `references/hw4-hw5-central-force.md`。
 

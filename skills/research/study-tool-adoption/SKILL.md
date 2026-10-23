@@ -22,8 +22,8 @@ metadata:
 还包括**第二个 agent（DSH / Claude Code / Codex 一类）**：「本机再装一个 agent，平时用 Hermes、有任务时让它去干」，
 这类走「并行 agent harness 类」那节 —— 先对齐模型层再谈 loop，结论往往与他的预期不同。
 
-**本技能只管「学习/研究类第三方工具」的评估与接入**；桌面客户端选型（听歌、看图、游戏）见 `linux-gui-apps`，
-本机环境/内存事实见 `linux-desktop-admin`。
+**本技能只管「学习/研究类第三方工具」的评估、接入与卸载**；桌面客户端选型（听歌、看图、游戏）见 `linux-gui-apps`，
+本机环境/内存事实见 `linux-desktop-admin`。卸载走下面「卸载：找官方脚本，再扫五处残留」那节。
 
 ## 第一原则：他要的是简报，不是安装
 
@@ -144,6 +144,23 @@ DSH（DeepSeek Harness）的 Linux 命令、profile 清单、404 根因与技能
 - 报「已核实 X ／ 未验证 Y」。**没装过就不要把安装步骤写成「已验证的流程」**，标明来源是官方文档。
 - 他决定装了再动手；装完**拿一个他真实的材料跑一次**（例如讲义某一章），
   用真实输出和他 wiki 里已沉淀的内容对照，而不是描述它「应该能做什么」。
+
+## 卸载：找官方脚本，再扫五处残留
+
+用户说「卸掉刚装的 X」不是「删了目录就完」，按这套：
+
+1. **先读它自带的 uninstall 脚本再用**，别手删。`ls <安装目录>/scripts/` 常带 `uninstall-*.sh`。默认档多数只删派生命令、**保留 config 与 credentials（含 API key）**，要 `--purge` 才连配置一起清；它还会按带标记的块自动清 shell rc 里的 PATH 片段，比手 grep 稳。读完再跑，不盲执行。
+2. **手删它没覆盖的残留**，重点五处：
+   - CLI 自己的用户配置与状态：`~/.<工具名>`、`~/.<工具名>.json`（常含 onboarding、历史、备份子目录）；
+   - 启动项：`~/.local/share/applications/<…>.desktop`、`~/.config/autostart/`、`~/.config/systemd/user/` 单元；
+   - shell rc：`~/.zshrc` / `~/.bashrc` / `~/.profile` / `~/.config/fish/config.fish`（fish 写的是 `set -gx PATH`，不是 export）；
+   - 自装运行时：这类客户端常把 node 与 CLI 本体塞在 `~/.<工具名>/node` 里，删安装目录就一并清掉 —— 真判据是 `command -v <它的命令>` 变空，不是目录在不在；
+   - 浏览器侧：Firefox 的 `~/.config/mozilla/firefox/<profile>/storage/default/https+++<domain>`（站点存储，属浏览器数据，报一句即可）。
+3. **别把同名技能当残留删**：`~/.hermes/skills/**`、`~/.dsh/skills/**` 里以工具名命名的目录（如 `claude-code`）是给 agent 看的文档，与安装无关。
+
+**破坏性动作前备份并声明何时清**：把 config/key 拷到 `$HERMES_HOME/cache/scratch/<工具>-backup-<日期>/`（scratch 24h 自动清），回复里给路径。核备份要用 `ls -la`——`ls`/`ls -R` 不显示 `.claude.json`、`.claude` 这类隐藏项，容易误判成没备成功。
+
+**验证交给 DSH 做只读复核**（这类活按分工本来就该 DSH 起手，见 skill `dsh-shared`）：给它一份固定清单——文件系统扫描（排除 `.hermes`/`.dsh`/`node_modules` 等别的软件自己的文档）+ `command -v` 三个变体 + 五个 rc 文件 grep + 进程/systemd/desktop + 历史条数，要求逐条带路径证据、只读不删；报告里标「DSH 复核得」。同一套检查我自己再跑一遍不算第二证据。
 
 ## 装完之后：核验它到底进没进工作流
 

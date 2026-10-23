@@ -23,10 +23,18 @@
 - Q3：参数共振（Arnold 倒立摆、支点 $y=a\cos\Omega t$）：小角方程
   $$\ddot\varphi=\Bigl(\frac gl-\frac{a\Omega^2}{l}\cos\Omega t\Bigr)\varphi .$$
   取 $\tau=\Omega t/2$ 后为 Mathieu 形：$\delta=-4g/(l\Omega^2)\le 0$、$\epsilon=4a/l$。
-  **$\delta\le0$ 是「反向区」**：$\epsilon=0$ 时方程本身就不稳定，所以倒立摆**不是**靠小 $\epsilon$ 的不稳定舌稳定，而是靠**大 $\epsilon$ 的 Kapitza 机制**拉回稳定区。
+  **$\delta\le0$ 是「反向区」**：$\epsilon=0$ 时方程本身就不稳定，$\epsilon\ne0$ 时靠 $n=0$ 舌把边界推离原点。稳定边界首两项 $\delta>-\epsilon^2/2+7\epsilon^4/32$，一阶就是 Kapitza 判据。**别写成「靠大 $\epsilon$ 稳定」**：$a\ll l$ 恒有 $\epsilon\ll1$，倒立摆整个故事都在小参数区，真正的要求是 $\sqrt{-\delta}<\epsilon/\sqrt2$。
   一阶判据 $a^2\Omega^2>2gl$。与 Mathieu 语言的关系**依赖约定，必须注明**：用频率 1 的写法 $p=\delta+\epsilon\cos t$（本例 $\delta=-g/(l\Omega^2)$、$\epsilon=a/l$）时边界是 $\delta+\epsilon^2/2=0$；用 $\tau=\Omega t/2$ 的写法则是 $\delta+\epsilon^2/8=0$。两种约定系数差 4 倍。
   $\Omega\approx2\sqrt{g/l}$ 那条**主舌属于下垂单摆**（$\delta=+g/(l\Omega^2)>0$），与倒立摆不是一回事，别搬。
-  两层判据分开写：平均法/快慢分离给一阶近似，**严格判据是 Floquet 乘子**（一周期转移矩阵：$|\operatorname{tr}M|<2$ 稳定、$=2$ 边界、$>2$ 不稳定）。定量边界不要凭记忆报数。
+  两层判据分开写：平均法/快慢分离给一阶近似，**严格判据是 Floquet 乘子**（一周期转移矩阵：$|\operatorname{tr}M|<2$ 稳定、$=2$ 边界、$>2$ 不稳定）。定量边界不要凭记忆报数；已核的三方核对（一阶式 / Maclaurin 级数 / Floquet RK4）在 $\epsilon=\tfrac12$ 处分别给 $\delta>-0.125$、$-0.1113$、$-0.112$（数值步长 0.002），一阶式系统性偏低，偏差量级 $\epsilon^4$。
+
+### Q3 完整交付形态（三张图，已用）
+
+1. **模型与方程**：$T,V$ 精确式 → E-L（两个 $\dot\varphi$ 项相消）→ 小角 Mathieu 形，末句点明「系数周期 ⇒ 参数激励，不是受迫振动」。
+2. **稳定的来源**：快慢分离三步，末句给 $a^2\Omega^2>2gl$。
+3. **判据的严格版本**：$\delta,\epsilon$ 定义 → 稳定边界首两项 → 首项与一阶判据配对 → 三方数值核对 → 「$a\ll l$ 迫使 $\Omega\gg\sqrt{g/l}$，否则判据与 $a\ll l$ 不相容」。
+
+正文只发四句结论式文字，公式全部渲图（`varwidth=15cm` + 165 dpi + `Noto Sans CJK SC`）。**「为什么必须高频」这一条要主动给**——题面只写了 $a\ll l$，这个缺口得自己补。
 
 ## 进度与起手（2026-10-21）
 
