@@ -21,7 +21,7 @@ for (const file of process.argv.slice(2)) {
   const soloDollar = lines.filter(l => l.trim() === '$').length;
   if (soloDollar > 0) { issues++; console.log(`[单独$行] ${file}: ${soloDollar} 行(应转 $$)`); }
   const codeFence = (c.match(/```/g) || []).length;
-  if (codeFence % 2 !== 0) { issues++; console.log(`[代码块残留] ${file}: ${codeFence} 个```(应为偶数)`); }
+  if (codeFence % 2 !== 0) { issues++; console.log("[代码块残留] " + file + ": " + codeFence + " 个 ```(应为偶数)"); }
   console.log(`$file: ${issues === 0 ? 'FORMAT_OK' : issues + ' 处问题'}($$=${displayOpen}, 行内$行正常)`);
   if (issues > 0) allOk = false;
 }
