@@ -2,7 +2,7 @@
 
 > 摘自 `wiki-writing-conventions` SKILL.md（2026-10-03 拆分），内容未改。
 
-来源:`/mnt/e/pika文件_Pro/笔记共享vault.zip`(他人 vault)
+来源:`/mnt/e/pika文件_Pro/笔记共享vault.zip`(他人 vault;**源 zip 已于 2026-10 随 pika 目录清理**)
 
 值得借鉴的 6 个方法(原记录在 `/mnt/e/notes/共享/SCHEMA.md`,**该文件已于 2026-09-11 删除,以下即权威版本,不再需要去 vault 里查**):
 

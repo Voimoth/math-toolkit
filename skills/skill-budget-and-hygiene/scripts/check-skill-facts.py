@@ -107,6 +107,15 @@ def main():
             if len(s) < 6 or (name, s) in seen:
                 continue
             # 省略号占位（`/mnt/h/.../x`）与空格截断（`common/Monster Hunter`）都是提取伪影，不是失效
+            line_start = txt.rfind('\n', 0, m.start()) + 1
+            line_end = txt.find('\n', m.end())
+            line = txt[line_start:line_end if line_end > 0 else len(txt)]
+            if re.search(r'已删|删掉|已废弃|不再存在|不存在|已清理|旧路径|原路径|移入回收站|运行时|才生成|若你|如果要', line):
+                artifacts.append((name, p, s))
+                continue
+            if re.search(r'\.(log|db|pid|sock|probe|html|tmp)$', s):
+                artifacts.append((name, p, s))
+                continue
             if '...' in s or '…' in s:
                 artifacts.append((name, p, s))
                 continue

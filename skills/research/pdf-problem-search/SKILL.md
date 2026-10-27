@@ -88,5 +88,5 @@ metadata:
 
 ## 参考
 
-- 原版来源:`/mnt/e/pika文件_Pro/pika资料共享/AI工具/pika_math_learning_toolkit-2.1.0.zip` 内 `payload/pdf-problem-search/`
+- 原版来源:pika 目录内 `pika_math_learning_toolkit-2.1.0.zip` 的 `payload/pdf-problem-search/`(**该目录 2026-10 已清理,本技能内容已内置,勿再去找原件**)
 - 配套:[[math-coach]](解题辅导)
