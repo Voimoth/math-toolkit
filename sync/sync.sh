@@ -20,7 +20,7 @@ SKILLS=(
   research/math-notes-transcription
   bookdex
   research/pdf-problem-search
-  research/group-theory-coaching
+  research/algebra-iii-coaching
   research/mechanics-coaching
   research/coaching-index
   research/user-math-library
@@ -28,6 +28,7 @@ SKILLS=(
   research/grounded-citations
   research/study-tool-adoption
   note-taking/wiki-writing-conventions
+  skill-budget-and-hygiene
 )
 
 RS=(-a --delete --exclude '__pycache__' --exclude '*.pyc' --exclude '.git')

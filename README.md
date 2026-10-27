@@ -22,7 +22,7 @@ nvim/                    Neovim 配置（mini.deps 管理插件，obsidian.nvim 
 | `math-notes-transcription` | 手写/扫描笔记转写与结构化 |
 | `bookdex` | 参考书目录检索：哪本书讲过 X（8300 本 / 201 万页） |
 | `pdf-problem-search` | 在 PDF 资料库里定位定理/习题出处 |
-| `group-theory-coaching` | 代数III 群论课程内容库 |
+| `group-theory-coaching` | 代数III 课程内容库（群 → 线代 → 双线性型） |
 | `mechanics-coaching` | 理论力学课程内容库 |
 | `coaching-index` | 各科进度总索引 |
 | `user-math-library` | 数学书籍归档整理 |
