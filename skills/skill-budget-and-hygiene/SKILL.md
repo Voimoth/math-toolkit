@@ -47,6 +47,7 @@ metadata:
 | 内容层 | 每门课一个技能，**按课程命名，不按分支命名** | `algebra-iii` / `analysis-iii` / `mechanics-b`；主题漂移时改内部小节，不改名 |
 | 进度账本（讲到哪、作业到第几周） | 只放 `coaching-index` 一处 | 训练/复习状态每天都在变，两处必矛盾 |
 | 案例、快照、题地图、历史实战、长表格 | `references/`，正文只留主题索引 | 不是每轮都要用的深度内容 |
+| 每轮必注入的记忆（MEMORY / USER） | 只放跨领域公用的事实、约定、元规则；领域细节一律外置，判据见 skill `hermes-memory-maintenance` 的「记忆的公用地带」 | 「一个只问数学的会话读到这条会不会无关？」会 → 外置 |
 | 会变的数值 / 路径 / 端口 / 版本 | **现场测**，不写死 | 本机实测 758 处路径引用已有 171 处（23%）失效 |
 | 知识沉淀 | wiki 概念页（`/mnt/e/notes`），技能里只留「去哪找 + 教法纪律 + 陷阱」 | 否则技能会随沉淀线性膨胀（group-theory 20KB→25.6KB 就是这么来的） |
 
@@ -95,30 +96,20 @@ frontmatter 加自用字段 `reviewed: YYYY-MM-DD`（Hermes 不读，脚本与�
 
 ## 本机工具(scripts/，别手搬)
 
-- `scripts/split-skill.py PATH [--move '节标题前缀=references/文件.md' ...] [--dry]` —— 把超大 `##` 节搬到 references：原文零删改、正文留首段+指针、自动子串证全（丢失/残留都报）、末尾报前后字符数。不带 `--move` 则只列节表供选。
+- `scripts/split-skill.py PATH [--move '节标题前缀=references/<文件名>.md' ...] [--dry]` —— 把超大 `##` 节搬到 references：原文零删改、正文留首段+指针、自动子串证全（丢失/残留都报）、末尾报前后字符数。不带 `--move` 则只列节表供选。文件名先 `ls references/` 避开同名已有文件，否则覆盖。
 - `scripts/check-skill-facts.py [--all] [--skill N] [--deep]` —— 核查正文里断言的本机路径是否还在。只查 `/mnt/*`、`~/*`、`~/.hermes/tools|skills|installs`、`~/.local/bin|share`、`~/.dsh` 等「真布局」前缀；`~/Desktop`、`~/.config/<某应用>` 这类例子不查（实测全查 282 条中 90% 是举例）。省略号占位与空格截断的提取伪影自动跳过。**端口不查**：技能里的 `:8080`/`:5678` 指「服务启动后应监听」，按「现在是否监听」判 100% 误报。
 - 跨技能指针（形如「见 <技能B> 的 references/<文件>」）在本技能目录里找不到文件是**正常的**，不是 dangling；别为此复制一份文件。
 
-## 已完成的迁移（2026-10-27）
+## 改动的操作手册
 
-| 技能 | 前 | 后 | 手法 |
-|---|---|---|---|
-| original-math-idea-review | 34,044 | 7,967 | 两大节进 references + 21 条判据骨架留正文 |
-| hermes-model-config | 31,877 | 5,170 | 五节进 4 个 references；Windows 便携版事实归档为 legacy |
-| linux-desktop-admin | 30,671 | 5,496 | §0/§1/§2/§5/3b 进 5 个 references |
-| koishi-hdsi-bot | 25,599 | 7,543 | 配置字段/坑/人设重置/部署 进 references |
-| algebra-iii-coaching | 25,501 | 7,632 | 改名（原 group-theory-coaching）+ 七节进 references |
-| steam-linux | 25,461 | 5,165 | 9b/9c/9d/9e/9/10 进 references |
-| mechanics-coaching | 16,369 | 4,545 | 教学要点/作业题地图进 references |
-| linux-gui-apps | 15,316 | 7,595 | UI/依赖/壁纸/启动器四真因进 references |
-| math-coach | 12,440 | 7,991 | 25 条校准判据压成骨架（每条≤118 字符），原话与案例进 references |
-| wiki-writing-conventions | 12,109 | 6,711 | vault 结构/必守项 20 条首句/记号迁移四坑进 references |
+改名 / 拆分 / 压缩成骨架 / 失效路径分类 / 回退，逐条命令与验收都在 `references/skill-surgery-playbook.md`。**拆编号列表前必读那一节的串号坑**：按空行切块会漏条，以编号为键会串号，只能逐行扫描并只接受严格递增的编号序列。
 
-合计 ~223k → ~60k 字符。按 30 天实际加载次数回算，每轮重读少 ~650k tokens。
+## 本机现状快照（2026-10 批量瘦身）
 
-**剩余（未做，需语义判断或上游覆盖）**：
-- 35 处真失效路径（`check-skill-facts.py` 可列，需逐条判「换新路径还是删整句」）。
-- 仍在启用且 >8,000 的 **bundled** 技能：humanizer 34k、p5js 27k、computer-use 18k、hermes-agent-skill-authoring 16k、systematic-debugging 16k、python-debugpy 15k。这些不归我们改（`hermes skills update` 会覆盖），要么不用时 `skills.disabled`，要么接受首次加载后的重读成本。
+十个高频技能已全部拆到 ≤8,000 字符（最重 34,044→7,967；合计 ~223k→~66k，按 30 天实际加载次数回算每轮少重读 ~65 万 tokens）。**剩下的活**：
+
+- `check-skill-facts.py` 残留 20 处，以示例、历史记录、运行时产物为主；真失效的逐条判「换新路径还是删整句」。
+- **bundled 大件一律不用就关**（成本不在索引一行，而在误触发一次就 8–34k）。2026-10-27 已 disable：humanizer 34k、p5js 27k、computer-use 18k、python-debugpy 15k、grounded-citations 12.6k、manim-video 12k、powerpoint 10.8k、xlsx 9.6k、hermes-desktop-plugins 8.8k、inspecting-hermes-desktop-dom、jupyter-live-kernel、obsidian（本机已卸）、opencode（代码走 DSH）。**留着没禁**：pdf、docx、arxiv、spike、github、blocked-page-recovery、architecture-diagram —— 索引一行很便宜，真需要时是刚需。
 
 ## 交付前自检
 
@@ -127,5 +118,8 @@ frontmatter 加自用字段 `reviewed: YYYY-MM-DD`（Hermes 不读，脚本与�
 - [ ] `description` ≤60 字符、无空格、前 12 字是触发词
 - [ ] 被取代的旧条目已删（不是追加在下面）
 - [ ] 可机检的事实改成脚本或现场测，正文里没有写死的路径/端口/版本
+- [ ] 拆走的节：原文 `in` references 且 `not in` 正文；frontmatter 仍能 `yaml.safe_load`
+- [ ] 压成骨架的：原文整节先存进 references 再重建正文，条数与编号核对过
+- [ ] 改过名的：`grep -rn '<旧名>'` 在 skills/ 与 memories/ 为 0，`.usage.json` 与索引快照已同步
 - [ ] `skill_view` 回读一遍，`linked_files` 与预期一致
 - [ ] 拆分/新建体量变化后报前后数字与回退方式
