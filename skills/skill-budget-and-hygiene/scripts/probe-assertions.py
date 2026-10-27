@@ -21,6 +21,7 @@ import argparse
 import datetime
 import json
 import os
+import re
 import shutil
 import socket
 import sqlite3
@@ -38,13 +39,32 @@ def _db(days=7):
 
 
 def probe_go_loop():
-    """模型思考流里是否仍会刷 “Go.”（用户口中的「唱歌」）。"""
-    db, cut = _db(7)
-    n = db.execute("""select count(*) from messages m join sessions s on s.id=m.session_id
-        where s.started_at>? and m.reasoning_content like '%Go.%'""", (cut,)).fetchone()[0]
-    if n:
-        return 'HOLDS', f'最近 7 天有 {n} 条 reasoning 含 “Go.”（结论：换模型并未让它消失，长会话仍会刷）'
-    return 'STALE', '最近 7 天 0 条 —— 可以删掉「唱歌→换非思考路由」那条，或标注“2026-10 后未复现”'
+    """「唱歌」= 单轮 reasoning 里连续刷几十条 "Go."，不是偶尔出现一两次。
+
+    判据（2026-10-27 与用户核对后定）：单轮 reasoning 中 "Go." 出现 >= 20 次才算刷屏；
+    偶发 1-2 次属正常思考流，不算问题。早期版本只统计"出现过"，把正常现象误判成问题。
+    """
+    db, _ = _db(0)
+    rows = db.execute("""select s.started_at, m.reasoning_content from messages m
+        join sessions s on s.id=m.session_id where m.reasoning_content like '%Go.%'""").fetchall()
+    hits = []
+    for ts, rc in rows:
+        n = rc.count('Go.')
+        if n >= 20:
+            run = max((len(m.group(0)) // 3 for m in re.finditer(r'(?:Go\.\s*){1,}', rc)), default=0)
+            hits.append((ts, n, run))
+    if not hits:
+        return 'HOLDS', '从未出现单轮 >=20 次刷屏（那条经验可删或降级为“历史记录”）'
+    last = max(h[0] for h in hits)
+    days = (datetime.datetime.now() - datetime.datetime.fromtimestamp(last)).days
+    worst = max(hits, key=lambda h: h[2])
+    note = (f'刷屏共 {len(hits)} 轮；最近一次 {datetime.datetime.fromtimestamp(last):%Y-%m-%d}'
+            f'（{days} 天前）；最大连续 {worst[2]} 次')
+    if days <= 7:
+        return 'HOLDS', note + ' → 仍会发生'
+    if days <= 30:
+        return 'WEAK', note + ' → 近 7 天未复现：记忆那条降级成「历史 + 复发判据」，条目里写清最近一次日期'
+    return 'STALE', note + ' → 超过 30 天未复现：删掉或只留一行历史记录'
 
 
 def probe_gh_proxy():
@@ -101,7 +121,7 @@ def probe_math_toolkit():
 
 ASSERTIONS = [
     dict(id='01', since='2026-10-03', how='实测长会话 reasoning',
-         text='deepseek-flash 思考流会刷 “Go.” → 换非思考路由 hermes -m deepseek-chat',
+         text='思考流「唱歌」= 单轮连续刷 ≥20 次 Go. → 换非思考路由 hermes -m deepseek-chat',
          fn=probe_go_loop),
     dict(id='02', since='2026-09', how='下载实测',
          text='GitHub clone 用 https://gh-proxy.com/ 前缀镜像',

@@ -82,7 +82,7 @@ metadata:
 2. **触发点固定**（写完笔记/写完解答就跑），不依赖「记得跑」。
 3. **脚本化后删掉对应的散文**，只留一行「跑 `check_x.py`」。
 
-不可判定的（先讲动机、不铺路、把球踢回去、诚实标注不确定）**不进脚本**，留在 SOUL 或方法层技能。
+不可判定的（先讲动机、不铺路、在推理中途把下一步交给他、诚实标注不确定）**不进脚本**，留在 SOUL 或方法层技能。
 
 ## 时效：过时内容分三类，处理手段不同
 
@@ -111,7 +111,7 @@ frontmatter 加自用字段 `reviewed: YYYY-MM-DD`（Hermes 不读，脚本与�
 ## 本机工具(scripts/，别手搬)
 
 - `scripts/split-skill.py PATH [--move '节标题前缀=references/<文件名>.md' ...] [--dry]` —— 把超大 `##` 节搬到 references：原文零删改、正文留首段+指针、自动子串证全（丢失/残留都报）、末尾报前后字符数。不带 `--move` 则只列节表供选。文件名先 `ls references/` 避开同名已有文件，否则覆盖。
-- `scripts/check-skill-facts.py [--all] [--skill N] [--deep]` —— 核查正文里断言的本机路径是否还在。只查 `/mnt/*`、`/home/_username/*`、`~/.hermes/tools|skills|installs`、`~/.local/bin|share`、`~/.dsh` 等「真布局」前缀；`~/Desktop`、`~/.config/<某应用>` 这类例子不查（实测全查 282 条中 90% 是举例）。省略号占位与空格截断的提取伪影自动跳过。**端口不查**：技能里的 `:8080`/`:5678` 指「服务启动后应监听」，按「现在是否监听」判 100% 误报。
+- `scripts/check-skill-facts.py [--all] [--skill N] [--deep]` —— 核查正文里断言的本机路径是否还在。只查 `/mnt/*`、`~/*`、`~/.hermes/tools|skills|installs`、`~/.local/bin|share`、`~/.dsh` 等「真布局」前缀；`~/Desktop`、`~/.config/<某应用>` 这类例子不查（实测全查 282 条中 90% 是举例）。省略号占位与空格截断的提取伪影自动跳过。**端口不查**：技能里的 `:8080`/`:5678` 指「服务启动后应监听」，按「现在是否监听」判 100% 误报。
 - `scripts/measure-skill-bloat.py [--days 30] [--top 15]` —— 先量再答：索引条数与 description 总字符、system prompt 各段位移、每个技能的正文大小、近 N 天每个技能被加载的「次数 × 平均字符」与累积重读量、超 8,000 字符清单。判断「该先动哪个」「最近为什么变笨」先跑它，别凭感觉。
 - `scripts/probe-assertions.py [--only 01]` —— 时间敏感断言的探针集：Go. 刷屏、gh-proxy 可达、本地 4B 端点、QQ 机器人端口、微信 connected、math-toolkit 可推。结论只有 HOLDS / STALE / SKIP 三种，STALE 就是「这条已过期，去改掉」。
 - 跨技能指针（形如「见 <技能B> 的 references/<文件>」）在本技能目录里找不到文件是**正常的**，不是 dangling；别为此复制一份文件。
@@ -126,6 +126,13 @@ frontmatter 加自用字段 `reviewed: YYYY-MM-DD`（Hermes 不读，脚本与�
 
 - `check-skill-facts.py` 残留 20 处，以示例、历史记录、运行时产物为主；真失效的逐条判「换新路径还是删整句」。
 - **bundled 大件一律不用就关**（成本不在索引一行，而在误触发一次就 8–34k）。2026-10-27 已 disable：humanizer 34k、p5js 27k、computer-use 18k、python-debugpy 15k、grounded-citations 12.6k、manim-video 12k、powerpoint 10.8k、xlsx 9.6k、hermes-desktop-plugins 8.8k、inspecting-hermes-desktop-dom、jupyter-live-kernel、obsidian（本机已卸）、opencode（代码走 DSH）。**留着没禁**：pdf、docx、arxiv、spike、github、blocked-page-recovery、architecture-diagram —— 索引一行很便宜，真需要时是刚需。
+
+## 文件行文规范（技能、记忆、画像一律适用）
+
+- **写书面陈述句**。禁口语填充：「顺手」「别攒着」「踩过重坑」「两条腿走」这类省字但带叙述口吻的写法，换成「随即」「不累积到会话末」「曾误判」「与实测并行」。
+- **禁动作隐喻**：「把球踢回去」「球在你手上」「加戏」「符号墙」。这类词会被下一次会话当指令复读给他听。要写「在推理中途停下，把下一步交给他」。
+- **引语只留判据依赖的**：他会自己说出口的触发词（「讲给我听」「直接说答案」）必须原样保留；而「我当年怎么被纠」「他原话……」「被点名滞后 3 天」这类叙事一律转成陈述句或删除。
+- **日期只在结论有版本/时效依赖时保留**（「2026-10 复测可以识图」「刷屏此后 24 天未复现」）；纯行为要求不带日期。同一个事实只写一次（技能与记忆重复时，按分层表决定谁留内容、谁留指针）。
 
 ## 交付前自检
 
