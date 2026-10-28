@@ -1,7 +1,7 @@
 ---
 name: math-coach
-description: "Use when 讲、解或写中文数学与物理：概念讲解、陪练、检查证明、交付完整解答；含中文表述规则与 prose_lint。触发：讲概念、复习、出题、证题、写解答、检查步骤、问严格性、法语术语对照。"
-version: 2.4.0
+description: "讲数学物理、陪练证明、写解答、复习与课业预算、法语术语"
+version: 2.4.1
 author: Hermes Agent (整合自 math-tutoring/math-tutoring-zh/math-learning-coach + pika math-coach v1.12)
 license: MIT
 platforms: [linux, macos, windows]
@@ -104,6 +104,14 @@ metadata:
 素材、策略细节与执行状态见 `references/french-listening.md`。
 **他再提听力困难时先问他执行到哪一步了**，别重复推荐同一套方案。
 
+## 课业预算与复习节奏
+
+他说时间不够、问该啃完还是放松、问能否把某门课当自由时间、说复习不出东西或忘光了、问「到底该怎么学」→ 读 `references/study-budget-and-review.md`。硬判据：先算课时账再给建议；复习是提取且排在作业之前（四类动作与文献见该文件 §3）；课程按资产型/门票型定档位，不评价价值；立最小结构先于挪动课时；读定理走 §10 的循环；做混编题集走 §11；他说「只是探讨」时只给机制不给操作清单、且不得立刻开读 PDF（§12）；问「概念间的深刻联系为什么 AI 讲不出来 / 怎么接入传播网络 / 老师没讲清楚的地方我怎么知道」走 §13。
+
+## 数学思想史与学派类提问
+
+他读完一段 Klein/Stillwell/Hardy 一类书后问「作者为什么这么写 / 这个观点有点怪 / 两个学派差在哪」→ 读 `references/math-culture-questions.md`。硬判据两条：先问作者的读者是谁（读者决定取舍与体例）；引文标明来自卷首导读还是正文核对。
+
 ## 讲解节奏
 
 1. 先读对应讲义文本(本地 /mnt/e/书籍/,PDF 用 pdfjs 提取,见 math-physics-wiki)
@@ -142,6 +150,7 @@ commit + push。**细则与原文备份见 skill `math-physics-wiki` 与 `refere
 
 预算极敏感（flash 一天约 5 元已嫌贵，省 token 手法见长期记忆「省钱规则」）；Clash 非必要不开；
 本地 7B 数学太弱已停用；中法班＝法国体系路径。细节以长期记忆为准。
+CLI 终端下可给长回答（他明说终端一屏数十行、长回答不难受），也可引文献，但须标证据强度与迁移风险；只有他说「直接说答案」才压到结论式。
 
 ## 相关
 

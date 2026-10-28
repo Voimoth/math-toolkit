@@ -70,7 +70,7 @@ wiki 页面、文件、回复中**不插 emoji / 符号表情**（★ ⚠️ ✅
 
 - **单一数据源**：`references/notation-rules.json`（机器规则）。人读的两份都由它生成，**不手写**：`references/notation-standard.md` 与 vault 的 `共享/记号约定.md`；改规则只改 JSON，再跑 `--emit-doc`。
 - **写完/改完含数学的文件就跑**：`python3 <技能目录>/scripts/check_notation.py --check`（默认扫全库，可给单课路径）；`--apply` 之前先出 dry-run 报表，`--apply` 会自动备份被改文件到 `~/.hermes/cache/notation-backup/`。
-- **裸符号必须按课程限定作用域，并记住同形不同义**：`S_n` 在分析与概率课是部分和；`S_i` 在 Coxeter 群页是单反射；`S_1,S_2` 常是 Sylow 子群；`A_1,A_2` 在群论史里是 Cayley 的生成符号；`A_n` 在概率课是事件；`\mathcal{S}_n(K)` 是代数II 的对称矩阵空间。规则里只放能判死的形态（`S_n`、`S_[3-7]`），数字下标 1/2 一律留给人判。
+- **裸符号必须按课程限定作用域，并记住同形不同义**：`S_n` 在分析与概率课是部分和；`S_i` 在 Coxeter 群页是单反射；`S_1,S_2` 常是 Sylow 子群；`A_1,A_2` 在群论史里是 Cayley 的生成符号；`A_n` 在概率课是事件；`\mathcal{S}_n(K)` 是代数II 的对称矩阵空间。规则里只放能判死的形态（`S_n`、`S_[3-7]`），数字下标 1/2 一律留给人判。但 `A_n` 本身被判死为交错群：Jordan–Chevalley 的半单/幂零部分写 `A_{\mathrm{s}}`、`A_{\mathrm{n}}`，写成 `A_n` 会被报成「交错群」误报。
 - **规则要覆盖同一对象的全部宏包装与两种形态**：漏 `\mathcal{GL}`、`\text{GL}`、`\mathrm O`（空格不带花括号）是第一批迁移的典型漏网；写规则时枚举 `mathrm/operatorname/text/mathcal/mathbf/mathsf` × 花括号/空格。
 - **符号要搬位置的改写不进规则**：正则只能就地替换，`A^T` → `{}^{t}A` 要把被转置对象整体搬到后面（`(AB)^T` 还会丢括号），`^T` 在分析课里又可能是积分上限（`\int_0^T`）。这类列成 manual 清单逐处改，脚本只负责把它们扫出来。
 - **违规报表只给 family 名与计数，不给行号**（形如 `经典群 x1, 经典群x1`）——定位办法：从 `references/notation-rules.json` 找出该 family 的 `fix[].pattern`，把 pattern 原样交给 `grep -nP` 在报错文件上跑，命中的行就是违规处。刚手写进去的裸符号（`$GL_n/SL_n$` 这种，数学段内的裸 `GL`/`SL` 也算）是高发源；改完重跑 `--check` 确认 0，否则下一次会被当成存量汇总混过去。
@@ -92,6 +92,8 @@ wiki 页面、文件、回复中**不插 emoji / 符号表情**（★ ⚠️ ✅
 - 没有孤儿概念页：既不在 `_索引`，也不被任何地图链接。
 
 以上三项由 `scripts/check_concept_sync.py` 一次跑完（退出码非 0 即未收尾）；流程细节见 `references/concept-sync.md`。
+
+**报「陈旧」时修的是地图文件的 `updated`，不是 registry**：登记表里有几页的 `covers` 是整门课而标题只写了一个窄主题（如理论力学的 `变分法学习路径`），该课任何新概念页都会让它落后，即使新页与它的主题无关。直接把它日期 bump 到当天；去改 registry 缩 `covers` 会连带改变其它判定的口径。
 
 **链接形态**：新页要同时进 `_索引` 与学习路径；表格/清单里引用可能跨课同名的概念必须写全路径（`[[代数III/概念/群]]`），裸链 `[[群]]` 会因为代数I/III 各有一页而被 `check_wikilinks` 判二义——本库有 11 组这样的存量重名页。
 
