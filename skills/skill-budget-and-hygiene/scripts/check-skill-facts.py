@@ -27,7 +27,7 @@ CONFIG = os.path.expanduser('~/.hermes/config.yaml')
 PATH_RE = re.compile(r'(?<![\w/])((?:/mnt/[a-z]|/home/_[a-z]+|~/)[\w\-./\u4e00-\u9fff]*)')
 # 只核查「断言本机真实布局」的前缀；`~/Desktop`、`~/.config/<某应用>` 这类在
 # 技能里绝大多数是举例，全查会出几百条误报（实测 282 条中 90% 是例子）。
-CHECK_PREFIXES = ('/mnt/e/', '/mnt/g/', '/mnt/h/', '~/', '/opt/',
+CHECK_PREFIXES = ('/mnt/e/', '/mnt/g/', '/mnt/h/', '/home/_username/', '/opt/',
                   '~/.hermes/tools/', '~/.hermes/skills/', '~/.hermes/installs/',
                   '~/.local/bin/', '~/.local/share/', '~/.dsh/')
 CAND_ROOTS = ['/mnt/e', '/mnt/h', '/mnt/g', os.path.expanduser('~/.hermes'), os.path.expanduser('~/.local/share'), '/opt']
