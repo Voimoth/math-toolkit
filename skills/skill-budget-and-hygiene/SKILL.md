@@ -110,7 +110,7 @@ frontmatter 加自用字段 `reviewed: YYYY-MM-DD`（Hermes 不读，脚本与�
 
 ## 本机工具(scripts/，别手搬)
 
-- `scripts/split-skill.py PATH [--move '节标题前缀=references/<文件名>.md' ...] [--dry]` —— 把超大 `##` 节搬到 references：原文零删改、正文留首段+指针、自动子串证全（丢失/残留都报）、末尾报前后字符数。不带 `--move` 则只列节表供选。文件名先 `ls references/` 避开同名已有文件，否则覆盖。
+- `scripts/split-skill.py PATH [--move '节标题前缀=references/<文件名>.md' ...] [--dry]` —— 把超大 `##` 节搬到 references：原文零删改、正文留首段+指针、自动子串证全（丢失/残留都报）、末尾报前后字符数。不带 `--move` 则只列节表供选。文件名先 `ls references/` 避开同名已有文件，否则覆盖。**覆盖是静默的**：同名文件整体重写（不是 append），实测丢过 3.9KB 已有内容；同一批多个 `--move` 指向同一个**新**文件名才会合并。
 - `scripts/check-skill-facts.py [--all] [--skill N] [--deep]` —— 核查正文里断言的本机路径是否还在。只查 `/mnt/*`、`~/*`、`~/.hermes/tools|skills|installs`、`~/.local/bin|share`、`~/.dsh` 等「真布局」前缀；`~/Desktop`、`~/.config/<某应用>` 这类例子不查（实测全查 282 条中 90% 是举例）。省略号占位与空格截断的提取伪影自动跳过。**端口不查**：技能里的 `:8080`/`:5678` 指「服务启动后应监听」，按「现在是否监听」判 100% 误报。
 - `scripts/measure-skill-bloat.py [--days 30] [--top 15]` —— 先量再答：索引条数与 description 总字符、system prompt 各段位移、每个技能的正文大小、近 N 天每个技能被加载的「次数 × 平均字符」与累积重读量、超 8,000 字符清单。判断「该先动哪个」「最近为什么变笨」先跑它，别凭感觉。
 - `scripts/probe-assertions.py [--only 01]` —— 时间敏感断言的探针集：Go. 刷屏、gh-proxy 可达、本地 4B 端点、QQ 机器人端口、微信 connected、math-toolkit 可推。结论只有 HOLDS / STALE / SKIP 三种，STALE 就是「这条已过期，去改掉」。
