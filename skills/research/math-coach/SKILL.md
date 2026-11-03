@@ -92,7 +92,7 @@ metadata:
 
 1. 概念页落盘（更新优先，bump `updated`）；
 2. 地图类文件同步（名单见 `wiki-writing-conventions/references/concept-map-registry.json`）；
-3. `check_notation.py --check` 与 `check_concept_sync.py` 全绿（`wiki-writing-conventions/scripts/`）。
+3. 四项检查全绿：有 `wiki_check` 工具就调它一次跑完（记号、断链、概念页同步、中文行文）；没有就按 `wiki-writing-conventions/scripts/` 里的脚本跑。
 
 细则见 `math-physics-wiki` 与 `references/wiki-sinking.md`。
 
