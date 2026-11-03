@@ -54,7 +54,7 @@ metadata:
 | 每轮都必须生效的硬约束 | `SOUL.md`（现 1.4KB，目标 ≤4KB） | 技能靠 description 匹配，匹配失败＝没约束；为拿三条规则先读 3–10k tok 正文是亏的 |
 | 方法 / 流程 / 判据 / 陷阱 | 一个技能，同类只此一处（本机＝`math-coach` 式的「方法层」） | 会被多门课共用的操作纪律 |
 | 内容层 | 每门课一个技能，**按课程命名，不按分支命名** | `algebra-iii` / `analysis-iii` / `mechanics-b`；主题漂移时改内部小节，不改名 |
-| 进度账本（讲到哪、作业到第几周） | 只放 `coaching-index` 一处 | 训练/复习状态每天都在变，两处必矛盾 |
+| 进度账本（讲到哪、作业到第几周、下次复习） | 只放 vault `共享/辅导进度.md` 一处；技能里只留指针 | 训练/复习状态每天都在变，两处必矛盾；账本是数据，不该随提示词一起吃 token |
 | 案例、快照、题地图、历史实战、长表格 | `references/`，正文只留主题索引 | 不是每轮都要用的深度内容 |
 | 每轮必注入的记忆（MEMORY / USER） | 只放跨领域公用的事实、约定、元规则；领域细节一律外置，判据见 skill `hermes-memory-maintenance` 的「记忆的公用地带」 | **领域无关性**：每一类会话（只问数学/只问代码/只排桌面/只玩游戏/只维护机器人）读到它都不能觉得多余；**反向也要查**跨领域通用操作（镜像前缀、SSH 端口、提权、识图降级、渲图）必须留在记忆 |
 | 会变的数值 / 路径 / 端口 / 版本 | **现场测**，不写死 | 本机实测 758 处路径引用已有 171 处（23%）失效 |
@@ -146,4 +146,4 @@ frontmatter 加自用字段 `reviewed: YYYY-MM-DD`（Hermes 不读，脚本与�
 - [ ] 改过名的：`grep -rn '<旧名>'` 在 skills/ 与 memories/ 为 0，`.usage.json` 与索引快照已同步
 - [ ] `skill_view` 回读一遍，`linked_files` 与预期一致
 - [ ] 拆分/新建体量变化后报前后数字与回退方式
-- [ ] 改过已发布技能:跑 `bash sync/sync.sh`,**再逐字节比对源与仓库副本**(`skills/<name>/SKILL.md`)。脚本报「无变化」也要比一次——出现过副本落后而脚本沉默;此时手动 `rsync -a --delete <源>/ skills/<name>/` + `git commit` + `git push -u origin HEAD`
+- [ ] 改过已发布技能:跑 `bash sync/sync.sh`,**再逐字节比对源与仓库副本**(`skills/<name>/SKILL.md`)。脚本报「无变化」也要比一次（出现过副本落后而脚本沉默）。**不要用手工 `rsync` + `git commit` 收尾**——那会绕过脚本尾部的 `sanitize.sed`，把 `/home/<user>/` 原样推上去；手工对齐后必须再跑一次 `sync.sh`。脱敏验收与白名单口径见 skill `skill-library-publishing`。
