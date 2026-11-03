@@ -13,27 +13,6 @@ metadata:
 
 # 数学笔记转写与结构化整理
 
-## 当前机器(Linux/CachyOS)首选路径
-
-- **批量视觉转录**: `scripts/vision_transcribe_batch.py`（纯标准库，无需 pip；key 自动从 `$HERMES_HOME/.env` 读）
-  ```bash
-  python3 ~/.hermes/skills/research/math-notes-transcription/scripts/vision_transcribe_batch.py \
-      --dir <图片目录> --start 45 --end 52 --model deepseek-flash \
-      --prompt '逐字转写这一页的全部文字，公式用 LaTeX，不要翻译/总结/补全看不清的内容'
-  ```
-  输出与图片同名的 `.txt`；已存在则跳过（`--redo` 强制重做）；失败会重试 3 次并汇总。
-  区间过滤按文件名结尾的数字（无编号的图当作在区间内），与旧 PowerShell 版语义一致。
-- **法文/手写扫描档的 prompt 用英文并显式要求「无前言」**：`--prompt 'Transcribe this handwritten French mathematics page verbatim into Markdown. Use LaTeX for inline $...$ and display $$...$$. Do not translate, do not summarize, do not complete unreadable parts (write [?] instead). Output only the transcription, with no preamble.'`——否则模型会在开头加一行 `Voici la transcription du manuscrit…` 类前言，合并前必须剔除。
-  - **正文是中文手写、术语夹法语时**，把语言那句换成 `Keep Chinese text in Chinese and French terms in French exactly as written`，其余照旧（既防模型把中文笔记译成英文，又保法语术语原样）。
-  - **页首的模型元评论行照用不误**：模型偶尔输出 `The image has been rotated 90 degrees counterclockwise. Here is the recognized text:` / `OCR result` 之类整页说明。**看到它不要重转或旋转该页**——先核对正文与邻页首尾是否衔接；衔接得上就只删掉这一行、内容照用。整批 50+ 页放 `terminal(background=True, notify=True)` 跑、日志重定向到文件（`> translog.txt 2>&1`）；脚本按已存在的 `.txt` 断点续转，中途重跑/超时都安全。**同时跑两份（如两门课各一个进程）时，别把两个任务塞进同一个 `background=true` 调用、也不要用 `( cmd & )` 包**——外层 `wait` 无可等会立即返回、session 被标记 exited，完成通知永远不来（进程成孤儿，只能自己轮询）；每个任务单独一次 `background=true, notify=true` 调用，或用前台 `while pgrep -f '<脚本名> --dir <目录>'; do sleep 15; done` 等待。详见 `references/handwritten-scan-workflow.md` §2。
-- **少量/单张**: 直接在当前会话读图自己转写（默认走主模型原生视觉）。
-- **扫描件纯 OCR**: `pdftoppm -r 300 -png in.pdf /tmp/pg` + `tesseract /tmp/pg-45.png stdout -l chi_sim+eng`
-  （tesseract 5.5.3 已装；语言包 chi_sim/eng/fra/osd 在 `/mnt/h/tesseract/tessdata`，**必须先 `export TESSDATA_PREFIX=/mnt/h/tesseract/tessdata`**，否则报找不到语言包；公式不可靠，手写体走视觉模型）
-- **印刷体也要先测再决定要不要上视觉模型**：实测英文印刷体（含 1916 年的老数学书）tesseract 近乎逐字正确，中文印刷体能认出章节行与标题但常错在数字与标点（`15.4` 读成 `15:4`、页码错位）。判据是**用途**：只要求「搜索能召回」→ tesseract 就够（150 dpi 约 1 秒/页）；要求当正文读、要页码精确 → 才上视觉模型。**批量上千页时全量走视觉既不划算也不更准**，分层降级才是对的：文本层 → tesseract → 只剩读不出的少数才贴图问模型。
-- 旧 Windows 版的 `.ps1` 脚本与只讲 Windows 的参考文档已于 2026-10-06 删除；Linux 下按上面列出的 `.py` 与系统工具走。
-
-服务对象:中科大中法班数学系大二学生。处理场景:手写法语/中文数学讲义 → 可读文字 → 结构化的 Obsidian 知识库。
-
 ## 触发条件
 
 - 用户提供手写笔记/扫描版 PDF,要求"整理成文字"
@@ -87,62 +66,6 @@ Obsidian 只认 `$...$`(同行)和 `$$...$$`(块级),**不认** `\(...\)`/`\[...
 
 > 详细内容：讲义出新版本时的推进摄入流程见 `references/lecture-update-workflow.md`。
 
-## 结构化整理(用户明确要求,2026-09)
-
-> 详细内容：概念页拆分、内容纯度、作业材料处理、标点与图示规则的全文见 `references/wiki-content-and-formatting-rules.md`。
-
-> 详细内容：常见 OCR 错误模式与修复法见 `references/ocr-error-patterns.md`。
-
-> 详细内容：有限群论断的枚举核验（含脚本用法）见 `references/group-enumeration-verification.md`。
-
-### 并入某课已有的笔记系列(新讲义 → 已有 `NN-篇名` 序列)
-
-来源是一份**新课程材料**（新的习题课讲义、单章讲义），而目标课程 vault 里**已经有成套笔记**时，不要按本技能的通用模板从头写，而是**续写这个系列**：
-
-- **先读该系列最近 2–3 篇再动笔**，复制它们的 frontmatter 字段集、H1 写法（`# N 主题（日期）`）、callout 标签格式与条目编号方式。**同课程既有文件是格式的唯一权威**：与本技能或偏好文件里的通用条目冲突时，以既有文件为准——例：通用条目说正文不带「（讲义 X.Y）」出处，而代数 III 正课/习题课笔记的既有形态恰恰是 `> [!note] 定义 5.1（轨道与稳定子群，讲义 1.1）`。
-- **续号并同步总览**：新篇接既有最大编号（`06-…` → `07-…`），该套的 `00-总览.md` 加一行。
-- **篇内条目重排为** `N.1`、`N.2`…，原讲义编号放括号里（既有笔记一律这么写）。
-- **来源是助教印发的编号讲义时，保留题面与讲义编号**（含「某年期中考试题」「某年丘赛…」这类出处），不要套用针对**手写习题课流水**的「删题号、只留知识条目」规则；判据是**来源形态**，见 `references/wiki-content-and-formatting-rules.md` 的「并入既有课程笔记系列」。
-- **归属靠内部编号对齐，不靠文件名**：一份无名 PDF 属于哪门课、哪套讲义，看它内部的编号体系能否与既有笔记引用的「讲义 X.Y」对上（如某 PDF 的 `§1.3` 与既有笔记的「讲义 1.1.x」同源，即是同一套习题课讲义的一节）。
-
-### 讲座/学术报告的整理（海报截图 + 现场手写笔记）
-
-输入通常是三件套：报告海报截图（题目、讲者、时间、摘要）、现场手写笔记的扫描 PDF、（可能还有拍照）。流程：
-
-1. **先读海报拿准框架**：题目、讲者、单位、时间地点、摘要四段。海报给的是讲者打算讲的结构，笔记给的是他实际讲了什么；两者对不上时以笔记为准，并在笔记里一句话点明差异。
-2. **读笔记**：页数少（≤ 10 页）就在当前会话逐页读图，不要为几页起批量脚本；页数多才转 300 dpi 后走 `scripts/vision_transcribe_batch.py` 或分页子代理。**逐页读也要按上文「判读小字」那条分带裁切**：整页图被下采样到 ~640 px 宽，速记的小字、上下标、`∃`、`Irr rep` 这类短词全是错的。
-3. **文件里只放原稿层；解释层不进文件（用户明确：「按原稿整理，而不是直接爆改我的笔记」）**：
-   - 忠实转写：速记、箭头、只有名词没有谓语的条目原样保留，**照抄讲者的原语言**（英/法就写英/法），公式只做 LaTeX 化，读不清写 `[?]`；**但文字缩写一律展开**（rep→representation、f.d.→finite dimensional、Thm.→Theorem、s.t.→such that、h.w.→highest weight 等，含 callout 标签与 `\text{}` 内；标准记号 GL_n/ker/dim 与 `\iff` 不动）。「照抄原语言」指语言与语气，**不包括保留缩写**；映射表、标签语言判定（跟文件正文语言）、批量展开流程见 `wiki-writing-conventions` 的 `references/abbreviation-expansion.md`；
-   - 不讲自己的动机链、最小例子、术语表，也不加「一句话总结」「为什么重要」「你可能会问」这类小节；
-   - **禁止把速记笔记改写成一气呵成的叙述**——讲座笔记本身就是速记，把它“翻译”成顺句等于替讲者编造他没说的话；
-   - 要讲就**在回复里按用户当前知识水平口头讲一遍**，并把可复用的数学沉淀成概念页（如由讲座带出的 `Schur-Weyl对偶`、`Hopf代数`）。曾把两层写进同一文件、用「原稿层/解释层」两个标题隔开，仍被要求删掉解释层（用户第二次纠正），所以不要两层的折中方案。
-   - **分节用原稿自带的标题**（Symmetric group、Bruhat decomposition、Schur-Weyl duality、Coproduct、Quantization…），**不要用 `## p.1`…`## p.6` 页号标题**：页号对读者没有信息量，用户会要求删掉；原稿没有标题就在该页内容里找一个自然的主题句。
-4. **落库**：`<课>/笔记/讲座/<YYYY-MM-DD>-<讲者>-<主题>.md`；单次讲座不需要 `00-总览`（同一系列多了再建），在该课正课 `00-总览` 里加一行「讲座」链接。frontmatter 用 `confidence: medium`（讲座内容不保证准确）。原件（PDF 与海报截图）归档到 `书籍/<学科>/<课>/讲座/`。
-5. **只抽 1–2 个真新概念建页**：选讲座主题的核心定理/结构建概念页（带最小例子），其余术语在讲座笔记的术语表里一句话解释——不要为一次讲座批量建空壳页。
-6. **补全与笔误直接写正稿，不标注**：讲座速记里系数、符号、下标几乎必漏，按标准约定补全后**直接写成正文**；原稿笔误（如把 $m_{(1)}(x)$ 写成 $m_{(1)}(1)$）也直接改。用户明确要求「笔误直接改掉不用标注」，页内不写「原稿作 X」「按标准约定应是 Y」这类注记；只有真正无法判定的字形才留 `[?]`，而整页不可读时应当请他重拍（他一次就拍来），不要用推断填充。
-
-### Vault 结构约定(2026-09 重构后)
-
-```
-/mnt/e/notes/                      # vault 根没有 README.md(已删);agent 一切工具/产物都不在此
-├── 数学\{分析,代数,概率}\          # 按学科
-│   ├── _索引.md                    # 学科导航
-│   ├── 分析I\分析II\分析III\       # 按课程细分
-│   │   ├── 概念\                   # 整理的知识库页(拆分的概念小文件)
-│   │   └── 笔记\                   # 一套笔记:00-总览.md + NN-章名.md;两套时:正课\ 与 习题课\ 各含自己的 00-总览.md
-├── 物理\{理论力学}\
-├── 共享\git-hooks\pre-commit      # 仓库护栏(拦 >5MB 文件),唯一的非 md 保留项
-└── log.md                        # 变更日志(追加式)
-```
-
-- **笔记 vs 概念分目录**:原始转写(OCR/视觉模型输出)放 `笔记\`,整理后的概念页放 `概念\`
-- **但 OCR 誊本(txt)本身不进 vault(2026-10-03 用户明确)**:提取/转写产生的 `*.txt` 放在 **agent 自己的工作目录**(`~/.hermes/cache/`),不要留在 vault;`sources:` 字段也写**讲义名称**(如 `殷浩《分析 2》上册`),不写文件名或路径。vault 必须能脱离用户本地文件独立阅读。
-- 新增学科:建目录 + `_索引.md`(vault 根无 README,不要再写 README 登记)
-- **正课/习题课的总览各放在各自文件夹里,「笔记」根下不放总览**(用户 2026-10 明确:「我更希望正课和习题课各自有一个总览, 放在各自的文件夹里面」)。判定:只有一套笔记的课程 → `笔记\00-总览.md`;同时有正课与习题课的课程 → **必须**是 `笔记\正课\00-总览.md` 与 `笔记\习题课\00-总览.md` 两份,各自只列本套篇目(正课总览按主题分节,习题课总览列各次)。**这不是「新建课程才遵守」的约定:发现既有课程不满足也要改**——把放在外层的合并总览拆成两份放进对应子目录、删掉外层文件、再把学科 `_索引.md` 的引用改成全路径(如 `[[代数III/笔记/正课/00-总览|代数 III 正课]]`);改完重跑断链扫描(`log.md` 里的历史记录链接断属正常)。
-- 每次变更 git add+commit+push(GitHub math_wiki 私有仓库,GCM 免密)
-
-> 详细内容：用户在笔记整理上的全部偏好见 `references/user-preferences-note-taking.md`。
-
 ## 相关技能
 
 - `nvim-config` — Neovim/obsidian.nvim 配置与排障
@@ -166,3 +89,18 @@ Obsidian 只认 `$...$`(同行)和 `$$...$$`(块级),**不认** `\(...\)`/`\[...
   `.git` 远大于工作区（本例 159 MB vs 1 MB）时的三步诊断（`count-objects` → `verify-pack` → `fsck --unreachable`）、
   可达性交叉验证、孤儿对象的**二进制安全导出**（`Start-Process -RedirectStandardOutput`，绕开 `&` 网关拦截与管道损坏）、
   按魔数识别类型、清理前的远程同步检查、`reflog expire + gc --prune=now` 回收。**含"别自行删除可能是用户照片的对象"的安全纪律。**
+## 结构化整理(用户明确要求,2026-09)
+
+> 详细内容：概念页拆分、内容纯度、作业材料处理、标点与图示规则的全文见 `references/wiki-content-and-formatting-rules.md`。
+
+→ 全文（含实测细节与命令）见 `references/structured-organization.md`
+
+## 当前机器(Linux/CachyOS)首选路径
+
+- **批量视觉转录**: `scripts/vision_transcribe_batch.py`（纯标准库，无需 pip；key 自动从 `$HERMES_HOME/.env` 读）
+  ```bash
+  python3 ~/.hermes/skills/research/math-notes-transcription/scripts/vision_transcribe_batch.py \
+      --dir <图片目录> --start 45 --end 52 --model deepseek-fl
+
+→ 全文（含实测细节与命令）见 `references/machine-paths.md`
+
